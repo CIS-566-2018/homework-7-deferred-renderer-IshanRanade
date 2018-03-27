@@ -1,4 +1,4 @@
-import {vec3, vec4} from 'gl-matrix';
+import {vec3, vec4, mat4} from 'gl-matrix';
 import Drawable from '../rendering/gl/Drawable';
 import {gl} from '../globals';
 import * as Loader from 'webgl-obj-loader';

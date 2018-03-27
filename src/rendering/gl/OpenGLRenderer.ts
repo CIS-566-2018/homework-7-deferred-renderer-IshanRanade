@@ -1,4 +1,4 @@
-import {mat4, vec4, vec3} from 'gl-matrix';
+import {mat4, vec4, vec3, vec2} from 'gl-matrix';
 import Drawable from './Drawable';
 import Camera from '../../Camera';
 import {gl} from '../../globals';
@@ -67,9 +67,9 @@ class OpenGLRenderer {
 
     // TODO: these are placeholder post shaders, replace them with something good
     this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost-frag.glsl'))));
-    this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost2-frag.glsl'))));
+    //this.add8BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost2-frag.glsl'))));
 
-    this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
+    //this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
 
     if (!gl.getExtension("OES_texture_float_linear")) {
       console.error("OES_texture_float_linear not available");
@@ -208,7 +208,7 @@ class OpenGLRenderer {
   }
 
 
-  renderToGBuffer(camera: Camera, gbProg: ShaderProgram, drawables: Array<Drawable>) {
+  renderToGBuffer(camera: Camera, gbProg: ShaderProgram, drawables: Array<Drawable>, dimensions: vec2) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.gBuffer);
     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
     gl.enable(gl.DEPTH_TEST);
@@ -226,6 +226,9 @@ class OpenGLRenderer {
     gbProg.setGeometryColor(color);
     gbProg.setViewMatrix(view);
     gbProg.setProjMatrix(proj);
+    gbProg.setFarClip(camera.far);
+    gbProg.setNearClip(camera.near);
+    gbProg.setDimensions(dimensions);
 
     gbProg.setTime(this.currentTime);
 

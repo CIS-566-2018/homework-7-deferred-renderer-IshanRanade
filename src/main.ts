@@ -1,4 +1,4 @@
-import {vec3} from 'gl-matrix';
+import {vec2, vec3} from 'gl-matrix';
 import * as Stats from 'stats-js';
 import * as DAT from 'dat-gui';
 import Square from './geometry/Square';
@@ -91,7 +91,7 @@ function main() {
   const standardDeferred = new ShaderProgram([
     new Shader(gl.VERTEX_SHADER, require('./shaders/standard-vert.glsl')),
     new Shader(gl.FRAGMENT_SHADER, require('./shaders/standard-frag.glsl')),
-    ]);
+  ]);
 
   standardDeferred.setupTexUnits(["tex_Color"]);
 
@@ -109,7 +109,7 @@ function main() {
 
     // TODO: pass any arguments you may need for shader passes
     // forward render mesh info into gbuffers
-    renderer.renderToGBuffer(camera, standardDeferred, [mesh0]);
+    renderer.renderToGBuffer(camera, standardDeferred, [mesh0], vec2.fromValues(window.innerWidth, window.innerHeight));
     // render from gbuffers into 32-bit color buffer
     renderer.renderFromGBuffer(camera);
     // apply 32-bit post and tonemap from 32-bit color to 8-bit color

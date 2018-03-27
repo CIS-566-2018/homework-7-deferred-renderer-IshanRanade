@@ -1,4 +1,4 @@
-import {vec4, mat4} from 'gl-matrix';
+import {vec2, vec4, mat4} from 'gl-matrix';
 import Drawable from './Drawable';
 import Texture from './Texture';
 import {gl} from '../../globals';
@@ -34,6 +34,9 @@ class ShaderProgram {
   unifProj: WebGLUniformLocation;
   unifColor: WebGLUniformLocation;
   unifTime: WebGLUniformLocation;
+  unifFarClip: WebGLUniformLocation;
+  unifNearClip: WebGLUniformLocation;
+  unifDimensions: WebGLUniformLocation;
 
   unifTexUnits: Map<string, WebGLUniformLocation>;
 
@@ -58,7 +61,10 @@ class ShaderProgram {
     this.unifView = gl.getUniformLocation(this.prog, "u_View");
     this.unifProj = gl.getUniformLocation(this.prog, "u_Proj");
     this.unifColor = gl.getUniformLocation(this.prog, "u_Color");
-    this.unifTime = gl.getUniformLocation(this.prog, "u_Time")
+    this.unifTime = gl.getUniformLocation(this.prog, "u_Time");
+    this.unifFarClip = gl.getUniformLocation(this.prog, "u_FarClip");
+    this.unifNearClip = gl.getUniformLocation(this.prog, "u_NearClip");
+    this.unifDimensions = gl.getUniformLocation(this.prog, "u_Dimensions");
 
     this.unifTexUnits = new Map<string, WebGLUniformLocation>();
   }
@@ -140,6 +146,27 @@ class ShaderProgram {
     this.use();
     if (this.unifTime !== -1) {
       gl.uniform1f(this.unifTime, t);
+    }
+  }
+
+  setFarClip(farClip: number) {
+    this.use();
+    if (this.unifFarClip !== -1) {
+      gl.uniform1f(this.unifFarClip, farClip);
+    }
+  }
+
+  setNearClip(nearClip: number) {
+    this.use();
+    if (this.unifNearClip !== -1) {
+      gl.uniform1f(this.unifNearClip, nearClip);
+    }
+  }
+
+  setDimensions(dimensions: vec2) {
+    this.use();
+    if (this.unifDimensions !== -1) {
+      gl.uniform2fv(this.unifDimensions, dimensions);
     }
   }
 
