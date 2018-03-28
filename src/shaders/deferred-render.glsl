@@ -102,8 +102,13 @@ vec3 getColor(vec2 uv) {
   vec3 color = vec3(gb2);
 
   if(gb2.xyz == vec3(0.0)) {
-    float n = cnoise(vec3(gl_FragCoord[0] * 0.01, gl_FragCoord[1] * 0.02f, u_Time / 10.0));
-    return vec3(n, n, n);
+    float n = cnoise(vec3(gl_FragCoord[0] * 0.005, gl_FragCoord[1] * 0.005, u_Time / 10.0));
+
+    vec3 c1 = vec3(1,0,0);
+    vec3 c2 = vec3(0,0,1);
+
+    vec3 final = n * c1 + (1.0 - n) * c2;
+    return final;
   }
   
   vec3 cameraPos = vec3(gb3[0], gb3[1], gb3[2]);
@@ -186,8 +191,6 @@ void main() {
 
   if(gb2.xyz == vec3(0.0)) {
     float n = cnoise(vec3(gl_FragCoord[0] * 0.005, gl_FragCoord[1] * 0.005, u_Time / 10.0));
-
-    //n = smoothstep(0.0, 1.0, n);
 
     vec3 c1 = vec3(1,0,0);
     vec3 c2 = vec3(0,0,1);
