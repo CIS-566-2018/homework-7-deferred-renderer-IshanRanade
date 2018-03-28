@@ -185,8 +185,16 @@ void main() {
   vec4 gb3 = texture(u_gb3, fs_UV);
 
   if(gb2.xyz == vec3(0.0)) {
-    float n = cnoise(vec3(gl_FragCoord[0] * 0.01, gl_FragCoord[1] * 0.02f, u_Time / 10.0));
-    out_Col = vec4(n, n, n, 1.0);
+    float n = cnoise(vec3(gl_FragCoord[0] * 0.005, gl_FragCoord[1] * 0.005, u_Time / 10.0));
+
+    //n = smoothstep(0.0, 1.0, n);
+
+    vec3 c1 = vec3(1,0,0);
+    vec3 c2 = vec3(0,0,1);
+
+    vec3 final = n * c1 + (1.0 - n) * c2;
+
+    out_Col = vec4(final, 1.0);
   } else {
     out_Col = vec4(applyGaussian(), 1.0);
   }
