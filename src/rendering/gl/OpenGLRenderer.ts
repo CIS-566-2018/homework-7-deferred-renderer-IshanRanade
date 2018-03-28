@@ -56,9 +56,9 @@ class OpenGLRenderer {
 
   constructor(public canvas: HTMLCanvasElement) {
     this.currentTime = 0.0;
-    this.gbTargets = [undefined, undefined, undefined, undefined, undefined];
-    this.post8Buffers = [undefined, undefined, undefined, undefined, undefined];
-    this.post8Targets = [undefined, undefined, undefined, undefined, undefined];
+    this.gbTargets = [undefined, undefined, undefined, undefined, undefined, undefined];
+    this.post8Buffers = [undefined, undefined, undefined, undefined, undefined, undefined];
+    this.post8Targets = [undefined, undefined, undefined, undefined, undefined, undefined];
     this.post8Passes = [];
 
     this.post32Buffers = [undefined, undefined, undefined];
@@ -73,11 +73,14 @@ class OpenGLRenderer {
     this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost2-frag.glsl'))));
     this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
     this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost4-frag.glsl'))));
+    this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost5-frag.glsl'))));
 
     this.post32Passes[0].setDimensions(vec2.fromValues(window.innerWidth, window.innerHeight));
     this.post32Passes[1].setDimensions(vec2.fromValues(window.innerWidth, window.innerHeight));
     this.post32Passes[2].setDimensions(vec2.fromValues(window.innerWidth, window.innerHeight));
     this.post32Passes[3].setDimensions(vec2.fromValues(window.innerWidth, window.innerHeight));
+    this.post32Passes[4].setDimensions(vec2.fromValues(window.innerWidth, window.innerHeight));
+
 
 
 
@@ -339,7 +342,21 @@ class OpenGLRenderer {
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
 
-    
+      // do hatching
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[5]);
+
+      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+      gl.disable(gl.DEPTH_TEST);
+      gl.enable(gl.BLEND);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[4]);
+
+      this.post32Passes[4].draw();
+
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
 
     // apply tonemapping
     // TODO: if you significantly change your framework, ensure this doesn't cause bugs!
@@ -360,7 +377,7 @@ class OpenGLRenderer {
     gl.activeTexture(gl.TEXTURE0);
     // bound texture is the last one processed before
 
-    gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[4]);
+    gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[5]);
 
     this.tonemapPass.draw();
 
