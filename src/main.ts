@@ -5,8 +5,8 @@ import Square from './geometry/Square';
 import Mesh from './geometry/Mesh';
 import OpenGLRenderer from './rendering/gl/OpenGLRenderer';
 import Camera from './Camera';
-import {setGL} from './globals.ts';
-import {readTextFile} from './globals.ts';
+import {setGL} from './globals';
+import {readTextFile} from './globals';
 import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 import Texture from './rendering/gl/Texture';
 
