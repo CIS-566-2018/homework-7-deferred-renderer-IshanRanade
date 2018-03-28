@@ -23,6 +23,7 @@ out vec2 fs_UV;
 out vec2 fs_Dimensions;
 out float fs_FarClip;
 out float fs_NearClip;
+out float fs_MeshPart;
 
 void main()
 {
@@ -44,4 +45,5 @@ void main()
     fs_Dimensions = u_Dimensions;
     fs_NearClip = u_NearClip;
     fs_FarClip = u_FarClip;
+    fs_MeshPart = 1.0;
 }

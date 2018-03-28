@@ -16,6 +16,8 @@ uniform float u_Time;
 uniform mat4 u_View;
 uniform vec4 u_CamPos;
 
+vec3 lightPos = vec3(100.0,100.0,100.0);
+
 vec3 applyGaussian() {
 
   vec4 gb0 = texture(u_gb0, fs_UV);
@@ -23,7 +25,7 @@ vec3 applyGaussian() {
   vec4 gb2 = texture(u_gb2, fs_UV);
 
   const int size = 64;
-  float sigma = 10.0 * gb0[3];
+  float sigma = 100.0 * smoothstep(0.0, 1.0, gb0[3]);
   float W = sqrt(float(size));
   float gaussian[size];
   float mean = float(W) / 2.0;
@@ -57,7 +59,8 @@ vec3 applyGaussian() {
       curCoord[1] += 1.0;
     }
 
-    color += gaussian[i] * vec3(texture(u_gb2, vec2(curCoord[0] / dimensions[0], curCoord[1] / dimensions[1])));
+    vec3 textureColor = vec3(texture(u_gb2, vec2(curCoord[0] / dimensions[0], curCoord[1] / dimensions[1])));
+    color += gaussian[i] * textureColor;
 
     curCoord[0] += 1.0;
   }
@@ -77,4 +80,8 @@ void main() {
 	col = gb2.xyz;
 
 	out_Col = vec4(applyGaussian(), 1.0);
+
+  if(gb2.xyz == vec3(0.0)) {
+    out_Col = vec4(0.5);
+  }
 }
