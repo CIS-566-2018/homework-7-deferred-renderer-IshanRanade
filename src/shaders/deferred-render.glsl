@@ -97,8 +97,14 @@ vec3 getColor(vec2 uv) {
   vec4 gb1 = texture(u_gb1, uv);
   vec4 gb2 = texture(u_gb2, uv);
   vec4 gb3 = texture(u_gb3, uv);
+  
 
   vec3 color = vec3(gb2);
+
+  if(gb2.xyz == vec3(0.0)) {
+    float n = cnoise(vec3(gl_FragCoord[0] * 0.01, gl_FragCoord[1] * 0.02f, u_Time / 10.0));
+    return vec3(n, n, n);
+  }
   
   vec3 cameraPos = vec3(gb3[0], gb3[1], gb3[2]);
   vec3 normal = vec3(gb0);
@@ -173,7 +179,6 @@ vec3 applyGaussian() {
 void main() { 
 	// read from GBuffers
 
-	
   vec4 gb0 = texture(u_gb0, fs_UV);
   vec4 gb1 = texture(u_gb1, fs_UV);
   vec4 gb2 = texture(u_gb2, fs_UV);

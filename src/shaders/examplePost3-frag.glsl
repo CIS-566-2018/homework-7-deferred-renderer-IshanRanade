@@ -10,7 +10,10 @@ uniform float u_Time;
 // Interpolate between regular color and channel-swizzled color
 // on right half of screen. Also scale color to range [0, 5].
 void main() {
+
 	vec3 color = texture(u_frame, fs_UV).xyz;
+  out_Col = vec4(color, 1.0);
+  return;
 	color += 10.0 * max(color - 0.5, vec3(0.0)); // color is not clamped to 1.0 in 32 bit color
 
 	vec3 color2 = color.brg;
