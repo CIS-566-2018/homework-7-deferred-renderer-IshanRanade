@@ -1,4 +1,4 @@
-import {vec2, vec4, mat4} from 'gl-matrix';
+import {vec2, vec4, mat4, vec3} from 'gl-matrix';
 import Drawable from './Drawable';
 import Texture from './Texture';
 import {gl} from '../../globals';
@@ -37,6 +37,7 @@ class ShaderProgram {
   unifFarClip: WebGLUniformLocation;
   unifNearClip: WebGLUniformLocation;
   unifDimensions: WebGLUniformLocation;
+  unifCameraPos: WebGLUniformLocation;
 
   unifTexUnits: Map<string, WebGLUniformLocation>;
 
@@ -65,6 +66,7 @@ class ShaderProgram {
     this.unifFarClip = gl.getUniformLocation(this.prog, "u_FarClip");
     this.unifNearClip = gl.getUniformLocation(this.prog, "u_NearClip");
     this.unifDimensions = gl.getUniformLocation(this.prog, "u_Dimensions");
+    this.unifCameraPos = gl.getUniformLocation(this.prog, "u_CameraPos");
 
     this.unifTexUnits = new Map<string, WebGLUniformLocation>();
   }
@@ -167,6 +169,13 @@ class ShaderProgram {
     this.use();
     if (this.unifDimensions !== -1) {
       gl.uniform2fv(this.unifDimensions, dimensions);
+    }
+  }
+
+  setCameraPos(pos: vec3) {
+    this.use();
+    if (this.unifCameraPos !== -1) {
+      gl.uniform3fv(this.unifCameraPos, pos);
     }
   }
 

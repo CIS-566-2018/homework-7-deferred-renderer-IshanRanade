@@ -9,8 +9,9 @@ in vec2 fs_Dimensions;
 in float fs_NearClip;
 in float fs_FarClip;
 in float fs_MeshPart;
+in vec3 fs_CameraPos;
 
-out vec4 fragColor[3]; // The data in the ith index of this array of outputs
+out vec4 fragColor[4]; // The data in the ith index of this array of outputs
                        // is passed to the ith index of OpenGLRenderer's
                        // gbTargets array, which is an array of textures.
                        // This lets us output different types of data,
@@ -34,13 +35,14 @@ void main() {
       col[0] = 0.01;
     }
     if(col[1] == 0.0) {
-      col[1] = 0.0;
+      col[1] = 0.01;
     }
     if(col[2] == 0.0) {
-      col[2] = 0.0;
+      col[2] = 0.01;
     }
 
     fragColor[0] = fs_Nor;
     fragColor[1] = vec4(fs_Dimensions, fs_NearClip, fs_FarClip);
     fragColor[2] = vec4(col, fs_MeshPart);
+    fragColor[3] = vec4(fs_CameraPos, 1.0);
 }

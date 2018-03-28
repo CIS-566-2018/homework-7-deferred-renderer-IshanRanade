@@ -56,7 +56,7 @@ class OpenGLRenderer {
 
   constructor(public canvas: HTMLCanvasElement) {
     this.currentTime = 0.0;
-    this.gbTargets = [undefined, undefined, undefined];
+    this.gbTargets = [undefined, undefined, undefined, undefined];
     this.post8Buffers = [undefined, undefined];
     this.post8Targets = [undefined, undefined];
     this.post8Passes = [];
@@ -229,6 +229,7 @@ class OpenGLRenderer {
     gbProg.setFarClip(camera.far);
     gbProg.setNearClip(camera.near);
     gbProg.setDimensions(dimensions);
+    gbProg.setCameraPos(camera.position);
 
     gbProg.setTime(this.currentTime);
 

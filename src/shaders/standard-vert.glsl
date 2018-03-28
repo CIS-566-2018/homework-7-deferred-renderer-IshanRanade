@@ -10,6 +10,7 @@ uniform mat4 u_Proj;
 uniform float u_FarClip;
 uniform float u_NearClip;
 uniform vec2 u_Dimensions;
+uniform vec3 u_CameraPos;
 
 in vec4 vs_Pos;
 in vec4 vs_Nor;
@@ -24,6 +25,7 @@ out vec2 fs_Dimensions;
 out float fs_FarClip;
 out float fs_NearClip;
 out float fs_MeshPart;
+out vec3 fs_CameraPos;
 
 void main()
 {
@@ -46,4 +48,5 @@ void main()
     fs_NearClip = u_NearClip;
     fs_FarClip = u_FarClip;
     fs_MeshPart = 1.0;
+    fs_CameraPos = u_CameraPos;
 }
