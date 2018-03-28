@@ -5,20 +5,16 @@ in vec2 fs_UV;
 out vec4 out_Col;
 
 uniform sampler2D u_frame;
+uniform sampler2D u_frame2;
 uniform float u_Time;
 
 // Interpolate between regular color and channel-swizzled color
 // on right half of screen. Also scale color to range [0, 5].
 void main() {
 
-	vec3 color = texture(u_frame, fs_UV).xyz;
-  out_Col = vec4(color, 1.0);
-  return;
-	color += 10.0 * max(color - 0.5, vec3(0.0)); // color is not clamped to 1.0 in 32 bit color
+	vec3 color1 = texture(u_frame, fs_UV).xyz;
+  vec3 color2 = texture(u_frame2, fs_UV).xyz;
+  color2 *= 2.0;
 
-	vec3 color2 = color.brg;
-	float t = 0.5 + 0.5 * cos(1.5 * 3.14 * (u_Time + 0.25));
-	t *= step(0.5, fs_UV.x);
-	color = mix(color, color2, smoothstep(0.0, 1.0, t));
-	out_Col = vec4(color, 1.0);
+  out_Col = vec4((color1 + color2) * 0.5, 1.0);
 }

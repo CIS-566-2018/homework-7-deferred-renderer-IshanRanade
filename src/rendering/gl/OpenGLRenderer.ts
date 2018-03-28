@@ -73,6 +73,10 @@ class OpenGLRenderer {
     this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost2-frag.glsl'))));
     this.add32BitPass(new PostProcess(new Shader(gl.FRAGMENT_SHADER, require('../../shaders/examplePost3-frag.glsl'))));
 
+    this.post32Passes[0].setDimensions(vec2.fromValues(window.innerWidth, window.innerHeight));
+    this.post32Passes[1].setDimensions(vec2.fromValues(window.innerWidth, window.innerHeight));
+    this.post32Passes[2].setDimensions(vec2.fromValues(window.innerWidth, window.innerHeight));
+
 
     if (!gl.getExtension("OES_texture_float_linear")) {
       console.error("OES_texture_float_linear not available");
