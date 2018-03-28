@@ -91,6 +91,28 @@ float cnoise(vec3 P){
 }
 
 
+vec3 lightPos = vec3(100.0,100.0,100.0);
+vec3 getColor(vec2 uv) {
+  vec4 gb0 = texture(u_gb0, uv);
+  vec4 gb1 = texture(u_gb1, uv);
+  vec4 gb2 = texture(u_gb2, uv);
+  vec4 gb3 = texture(u_gb3, uv);
+
+  vec3 color = vec3(gb2);
+  
+  vec3 cameraPos = vec3(gb3[0], gb3[1], gb3[2]);
+  vec3 normal = vec3(gb0);
+
+  vec3 lightVec = lightPos - cameraPos;
+  float diffuseTerm = dot(normalize(normal), normalize(lightVec));
+  diffuseTerm = abs(diffuseTerm);
+  diffuseTerm = clamp(diffuseTerm, 0.f, 1.f);
+  float ambientTerm = 0.1;
+  float lightIntensity = diffuseTerm + ambientTerm;
+  lightIntensity *= 5.0;
+
+  return color.rgb * lightIntensity;
+}
 
 
 
@@ -135,7 +157,8 @@ vec3 applyGaussian() {
       curCoord[1] += 1.0;
     }
 
-    vec3 textureColor = vec3(texture(u_gb2, vec2(curCoord[0] / dimensions[0], curCoord[1] / dimensions[1])));
+
+    vec3 textureColor = getColor(vec2(curCoord[0] / dimensions[0], curCoord[1] / dimensions[1]));
     color += gaussian[i] * textureColor;
 
     curCoord[0] += 1.0;
@@ -145,7 +168,7 @@ vec3 applyGaussian() {
 }
 
 
-vec3 lightPos = vec3(100.0,100.0,100.0);
+
 
 void main() { 
 	// read from GBuffers
@@ -161,17 +184,5 @@ void main() {
     out_Col = vec4(n, n, n, 1.0);
   } else {
     out_Col = vec4(applyGaussian(), 1.0);
-
-    vec3 cameraPos = vec3(gb3[0], gb3[1], gb3[2]);
-    vec3 normal = vec3(gb0);
-
-    vec3 lightVec = lightPos - cameraPos;
-    float diffuseTerm = dot(normalize(normal), normalize(lightVec));
-    diffuseTerm = abs(diffuseTerm);
-    diffuseTerm = clamp(diffuseTerm, 0.f, 1.f);
-    float ambientTerm = 0.1;
-    float lightIntensity = diffuseTerm + ambientTerm;
-    lightIntensity *= 5.0;
-    out_Col = vec4(out_Col.rgb * lightIntensity, out_Col.a);
   }
 }
