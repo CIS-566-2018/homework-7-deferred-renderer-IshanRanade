@@ -41,8 +41,8 @@ var timer = {
 
 
 function loadOBJText() {
-  obj0 = readTextFile('../resources/obj/wahoo.obj');
-  obj1 = readTextFile('../resources/obj/lowpolytree.obj');
+  obj0 = readTextFile('./resources/obj/wahoo.obj');
+  obj1 = readTextFile('./resources/obj/lowpolytree.obj');
 }
 
 
@@ -60,7 +60,7 @@ function loadScene() {
   mesh1 = new Mesh(obj1, vec3.fromValues(0, 0, 0));
   mesh1.create();
 
-  tex0 = new Texture('../resources/textures/wahoo.bmp')
+  tex0 = new Texture('./resources/textures/wahoo.bmp');
 }
 
 function main() {
