@@ -57,8 +57,8 @@ class OpenGLRenderer {
   constructor(public canvas: HTMLCanvasElement) {
     this.currentTime = 0.0;
     this.gbTargets = [undefined, undefined, undefined, undefined];
-    this.post8Buffers = [undefined, undefined, undefined];
-    this.post8Targets = [undefined, undefined, undefined];
+    this.post8Buffers = [undefined, undefined, undefined, undefined];
+    this.post8Targets = [undefined, undefined, undefined, undefined];
     this.post8Passes = [];
 
     this.post32Buffers = [undefined, undefined, undefined];
@@ -268,6 +268,7 @@ class OpenGLRenderer {
 
   // TODO: pass any info you need as args
   renderPostProcessHDR() {
+      // extract bloom pixels
       gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[1]);
 
       gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
@@ -283,7 +284,7 @@ class OpenGLRenderer {
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
 
-      // second pass
+      // blur the image
       gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[2]);
 
       gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
@@ -295,6 +296,23 @@ class OpenGLRenderer {
       gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[1]);
 
       this.post32Passes[1].draw();
+
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+      // composite pass
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[3]);
+
+      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+      gl.disable(gl.DEPTH_TEST);
+      gl.enable(gl.BLEND);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[0]);
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[2]);
+
+      this.post32Passes[2].draw();
 
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
@@ -320,7 +338,7 @@ class OpenGLRenderer {
     gl.activeTexture(gl.TEXTURE0);
     // bound texture is the last one processed before
 
-    gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[0]);
+    gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[3]);
 
     this.tonemapPass.draw();
 
