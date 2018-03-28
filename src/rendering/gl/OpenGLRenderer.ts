@@ -33,6 +33,10 @@ class OpenGLRenderer {
 
   currentTime: number; // timer number to apply to all drawing shaders
 
+  activePointillism = false;
+  activeBloom = false;
+  activeHatching = false;
+
   // the shader that renders from the gbuffers into the postbuffers
   deferredShader :  PostProcess = new PostProcess(
     new Shader(gl.FRAGMENT_SHADER, require('../../shaders/deferred-render.glsl'))
@@ -278,84 +282,92 @@ class OpenGLRenderer {
 
   // TODO: pass any info you need as args
   renderPostProcessHDR() {
-      // extract bloom pixels
-      gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[1]);
+      let activeTexture: number = 0;
+      let activeBuffer: number = 1;
 
-      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-      gl.disable(gl.DEPTH_TEST);
-      gl.enable(gl.BLEND);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      if(this.activeBloom) {
+        // extract bloom pixels
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[1]);
 
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[0]);
+        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+        gl.disable(gl.DEPTH_TEST);
+        gl.enable(gl.BLEND);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-      this.post32Passes[0].draw();
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[0]);
 
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        this.post32Passes[0].draw();
 
-
-      // blur the image
-      gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[2]);
-
-      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-      gl.disable(gl.DEPTH_TEST);
-      gl.enable(gl.BLEND);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[1]);
-
-      this.post32Passes[1].draw();
-
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-      // composite pass
-      gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[3]);
-
-      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-      gl.disable(gl.DEPTH_TEST);
-      gl.enable(gl.BLEND);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[0]);
-      gl.activeTexture(gl.TEXTURE1);
-      gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[2]);
-
-      this.post32Passes[2].draw();
-
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-      // do pointillism
-      gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[4]);
-
-      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-      gl.disable(gl.DEPTH_TEST);
-      gl.enable(gl.BLEND);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[3]);
-
-      this.post32Passes[3].draw();
-
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
 
-      // do hatching
-      gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[5]);
+        // blur the image
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[2]);
 
-      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-      gl.disable(gl.DEPTH_TEST);
-      gl.enable(gl.BLEND);
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+        gl.disable(gl.DEPTH_TEST);
+        gl.enable(gl.BLEND);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[4]);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[1]);
 
-      this.post32Passes[4].draw();
+        this.post32Passes[1].draw();
 
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        // composite pass
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[3]);
+
+        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+        gl.disable(gl.DEPTH_TEST);
+        gl.enable(gl.BLEND);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[0]);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[2]);
+
+        this.post32Passes[2].draw();
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        activeTexture += 3;
+        activeBuffer += 3;
+      }
+
+      // // do pointillism
+      // gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[4]);
+
+      // gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+      // gl.disable(gl.DEPTH_TEST);
+      // gl.enable(gl.BLEND);
+      // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+      // gl.activeTexture(gl.TEXTURE0);
+      // gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[3]);
+
+      // this.post32Passes[3].draw();
+
+      // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+
+      // // do hatching
+      // gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[5]);
+
+      // gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+      // gl.disable(gl.DEPTH_TEST);
+      // gl.enable(gl.BLEND);
+      // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+      // gl.activeTexture(gl.TEXTURE0);
+      // gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[4]);
+
+      // this.post32Passes[4].draw();
+
+      // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
 
     // apply tonemapping
@@ -377,7 +389,7 @@ class OpenGLRenderer {
     gl.activeTexture(gl.TEXTURE0);
     // bound texture is the last one processed before
 
-    gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[5]);
+    gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[activeTexture]);
 
     this.tonemapPass.draw();
 
