@@ -3647,7 +3647,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__geometry_Mesh__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__rendering_gl_OpenGLRenderer__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Camera__ = __webpack_require__(43);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__globals__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__globals_ts__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__rendering_gl_ShaderProgram__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__rendering_gl_Texture__ = __webpack_require__(76);
 
@@ -3684,8 +3684,8 @@ var timer = {
     },
 };
 function loadOBJText() {
-    obj0 = Object(__WEBPACK_IMPORTED_MODULE_7__globals__["b" /* readTextFile */])('../resources/obj/wahoo.obj');
-    obj1 = Object(__WEBPACK_IMPORTED_MODULE_7__globals__["b" /* readTextFile */])('../resources/obj/lowpolytree.obj');
+    obj0 = Object(__WEBPACK_IMPORTED_MODULE_7__globals_ts__["b" /* readTextFile */])('./resources/obj/wahoo.obj');
+    obj1 = Object(__WEBPACK_IMPORTED_MODULE_7__globals_ts__["b" /* readTextFile */])('./resources/obj/lowpolytree.obj');
 }
 function loadScene() {
     square && square.destroy();
@@ -3697,7 +3697,7 @@ function loadScene() {
     mesh0.create();
     mesh1 = new __WEBPACK_IMPORTED_MODULE_4__geometry_Mesh__["a" /* default */](obj1, __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["c" /* vec3 */].fromValues(0, 0, 0));
     mesh1.create();
-    tex0 = new __WEBPACK_IMPORTED_MODULE_9__rendering_gl_Texture__["a" /* default */]('../resources/textures/wahoo.bmp');
+    tex0 = new __WEBPACK_IMPORTED_MODULE_9__rendering_gl_Texture__["a" /* default */]('./resources/textures/wahoo.bmp');
 }
 function main() {
     // Initial display for framerate
@@ -3732,7 +3732,7 @@ function main() {
     }
     // `setGL` is a function imported above which sets the value of `gl` in the `globals.ts` module.
     // Later, we can import `gl` from `globals.ts` to access it
-    Object(__WEBPACK_IMPORTED_MODULE_7__globals__["c" /* setGL */])(gl);
+    Object(__WEBPACK_IMPORTED_MODULE_7__globals_ts__["c" /* setGL */])(gl);
     // Initial call to load scene
     loadScene();
     const camera = new __WEBPACK_IMPORTED_MODULE_6__Camera__["a" /* default */](__WEBPACK_IMPORTED_MODULE_0_gl_matrix__["c" /* vec3 */].fromValues(0, 9, 25), __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["c" /* vec3 */].fromValues(0, 9, 0));
