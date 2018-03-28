@@ -63,6 +63,13 @@ function loadScene() {
   tex0 = new Texture('../resources/textures/wahoo.bmp')
 }
 
+let activePointillism = true;
+let activeBloom = true;
+let activeHatching = true;
+
+function reload() {
+
+}
 
 function main() {
   // Initial display for framerate
@@ -74,7 +81,25 @@ function main() {
   document.body.appendChild(stats.domElement);
 
   // Add controls to the gui
-  // const gui = new DAT.GUI();
+  const gui = new DAT.GUI();
+  gui.add({ "Pointillism": false}, "Pointillism").
+    listen().
+    onFinishChange(function() {
+      activePointillism = !activePointillism;
+      reload();
+    });
+  gui.add({ "Bloom": false}, "Bloom").
+    listen().
+    onFinishChange(function() {
+      activeBloom = !activeBloom;
+      reload();
+    });
+  gui.add({ "Hatching": false}, "Hatching").
+    listen().
+    onFinishChange(function() {
+      activeHatching = !activeHatching;
+      reload();
+    });
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
