@@ -338,36 +338,45 @@ class OpenGLRenderer {
         activeBuffer += 3;
       }
 
-      // // do pointillism
-      // gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[4]);
+      if(this.activePointillism) {
+        // do pointillism
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[activeBuffer]);
 
-      // gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-      // gl.disable(gl.DEPTH_TEST);
-      // gl.enable(gl.BLEND);
-      // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+        gl.disable(gl.DEPTH_TEST);
+        gl.enable(gl.BLEND);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-      // gl.activeTexture(gl.TEXTURE0);
-      // gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[3]);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[activeTexture]);
 
-      // this.post32Passes[3].draw();
+        this.post32Passes[3].draw();
 
-      // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
+        activeTexture += 1;
+        activeBuffer += 1;
+      }
 
-      // // do hatching
-      // gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[5]);
+      if(this.activeHatching) {
+        // do hatching
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.post32Buffers[activeBuffer]);
 
-      // gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-      // gl.disable(gl.DEPTH_TEST);
-      // gl.enable(gl.BLEND);
-      // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+        gl.disable(gl.DEPTH_TEST);
+        gl.enable(gl.BLEND);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-      // gl.activeTexture(gl.TEXTURE0);
-      // gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[4]);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.post32Targets[activeTexture]);
 
-      // this.post32Passes[4].draw();
+        this.post32Passes[4].draw();
 
-      // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        activeTexture += 1;
+        activeBuffer += 1;
+      }
 
 
     // apply tonemapping
