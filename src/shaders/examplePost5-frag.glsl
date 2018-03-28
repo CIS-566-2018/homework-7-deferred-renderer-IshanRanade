@@ -15,18 +15,20 @@ float rand(float n){return fract(sin(n) * 43758.5453123);}
 void main() {
 
   vec3 c = vec3(texture(u_frame, fs_UV));
-  out_Col = vec4(c, 1.0);
-  return;
+  //out_Col = vec4(c, 1.0);
+  //sreturn;
 
   vec2 thisPixel = vec2(int(fs_UV[0] * u_Dimensions[0]), int(fs_UV[1] * u_Dimensions[1]));
 
   float v = dot(c, c);
 
+  float timeScale = 100000000.0;
+
   // Change the diagonal of the line over time
-  float sign = sin(u_Time/10.0) > 0.5 ? 1.0 : -1.0;
+  float sign = sin(u_Time/timeScale) > 0.5 ? 1.0 : -1.0;
 
   // Gives appearance of being redrawn over time
-  float random = rand(u_Time/10.0);
+  float random = rand(u_Time/timeScale);
 
   const float n = 8.0;
 
