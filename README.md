@@ -1,5 +1,11 @@
 # Project 7: Deferred Renderer
 
+# Deferred Renderer
+
+# Demo Link
+https://ishanranade.github.io/DeferredRenderer/
+
+# Details
 **Goal:** Learn an advanced rendering technique using the OpenGL pipeline and apply it to make artistic procedural post-processing effects.
 
 ## Render pipeline overview
