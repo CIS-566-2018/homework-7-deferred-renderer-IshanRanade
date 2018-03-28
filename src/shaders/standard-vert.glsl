@@ -21,6 +21,8 @@ out vec4 fs_Nor;
 out vec4 fs_Col;           
 out vec2 fs_UV;
 out vec2 fs_Dimensions;
+out float fs_FarClip;
+out float fs_NearClip;
 
 void main()
 {
@@ -40,4 +42,6 @@ void main()
     fs_Nor.w = gl_Position.z / (u_FarClip - u_NearClip);
 
     fs_Dimensions = u_Dimensions;
+    fs_NearClip = u_NearClip;
+    fs_FarClip = u_FarClip;
 }

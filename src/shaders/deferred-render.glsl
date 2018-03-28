@@ -17,30 +17,46 @@ uniform mat4 u_View;
 uniform vec4 u_CamPos;
 
 vec3 applyGaussian() {
-  const int size = 9;
-  float gaussian[size] = float [size]( 
-    0.110741,	0.111296,	0.110741,
-    0.111296,	0.111853,	0.111296,
-    0.110741,	0.111296,	0.110741 );
 
   vec4 gb0 = texture(u_gb0, fs_UV);
   vec4 gb1 = texture(u_gb1, fs_UV);
   vec4 gb2 = texture(u_gb2, fs_UV);
-  
+
+  const int size = 64;
+  float sigma = 10.0 * gb0[3];
+  float W = sqrt(float(size));
+  float gaussian[size];
+  float mean = float(W) / 2.0;
+  float sum = 0.0;
+
+  int index = 0;
+  for (float x = 0.0; x < W; x += 1.0) {
+    for (float y = 0.0; y < W; y += 1.0) {
+        gaussian[index] = exp( -0.5 * (pow((x-mean)/sigma, 2.0) + pow((y-mean)/sigma,2.0)) )
+                         / (2.0 * 3.1415 * sigma * sigma);
+
+        // Accumulate the kernel values
+        sum += gaussian[index];
+        index += 1;
+    }
+  }
+
+  for(int x = 0; x < size; x++) {
+    gaussian[x] /= sum;
+  }
+
   vec2 dimensions = vec2(gb1[0], gb1[1]);
   vec2 startCoord = vec2(float(int(dimensions[0] * fs_UV[0])) - 1.0, float(int(dimensions[1] * fs_UV[1])) - 1.0);
 
   vec3 color = vec3(0.0f);
 
-  float sum = 0.0;
   vec2 curCoord = startCoord;
   for(int i = 0; i < size; ++i) {
-    if(i % 11 == 0) {
+    if(i != 0 && i % int(sqrt(float(size))) == 0) {
       curCoord[0] = startCoord[0];
       curCoord[1] += 1.0;
     }
 
-    sum += gaussian[i];
     color += gaussian[i] * vec3(texture(u_gb2, vec2(curCoord[0] / dimensions[0], curCoord[1] / dimensions[1])));
 
     curCoord[0] += 1.0;
